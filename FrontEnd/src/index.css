@@ -1,0 +1,138 @@
+/* Reset and Normalize CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 0;
+  margin: 0;
+}
+
+/* Global Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Heading Styles */
+h1, h2, h3, h4, h5, h6 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: 2.5em;
+  text-align: center;
+}
+
+h2 {
+  font-size: 2em;
+}
+
+h3 {
+  font-size: 1.8em;
+}
+
+/* Buttons */
+button {
+  padding: 15px;
+  margin: 10px;
+  font-size: 1.1em;
+  cursor: pointer;
+  background-color: #27AE60;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+button:hover {
+  background-color: #2ECC71;
+  transform: translateY(-3px);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+/* Input Fields */
+input[type="text"], input[type="number"], input[type="email"], input[type="password"] {
+  width: 100%;
+  padding: 14px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 1em;
+  background-color: #f4f4f9;
+}
+
+input:focus {
+  outline: none;
+  border-color: #27AE60;
+}
+
+/* Form Styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Card-Like Containers for Content */
+.card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Error/Success Messages */
+.alert {
+  padding: 15px;
+  background-color: #FF4136;
+  color: white;
+  border-radius: 6px;
+  font-size: 1.1em;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.alert.success {
+  background-color: #2ECC71;
+}
+
+.alert.error {
+  background-color: #FF4136;
+}
+
+/* Links */
+a {
+  text-decoration: none;
+  color: #27AE60;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: #2ECC71;
+}
+
+/* Footer Styling */
+footer {
+  background-color: #2C3E50;
+  color: white;
+  text-align: center;
+  padding: 20px;
+  margin-top: 50px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
