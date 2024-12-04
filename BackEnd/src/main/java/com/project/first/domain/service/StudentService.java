@@ -22,7 +22,7 @@ public class StudentService {
     }
 
     public ResponseEntity<StudentGenaralDto> getStudent(int id) {
-        Optional<Student> student = studentRepository.findById(id);
+        Optional<Student> student = studentRepository.getStudent(id);
         StudentGenaralDto studentGenaralDto = new StudentGenaralDto();
         if (student.isPresent()) {
             Student studentEntity = student.get();
@@ -38,9 +38,10 @@ public class StudentService {
         Student student = new Student();
         student.setName(studentCreateDto.getName());
         student.setDob(studentCreateDto.getDob());
-        studentRepository.save(student);
+        int id = studentRepository.addStudent(student);
+        System.out.println(id);
 
-        Student studentEntity = studentRepository.findById(student.getId()).get();
+        Student studentEntity = studentRepository.getStudent(id).get();
         StudentGenaralDto studentGenaralDto = new StudentGenaralDto();
         studentGenaralDto.setName(studentEntity.getName());
         studentGenaralDto.setDob(studentEntity.getDob());
@@ -48,19 +49,19 @@ public class StudentService {
     }
 
     public ResponseEntity<String> deleteStudent(int id) {
-        Optional<Student> student = studentRepository.findById(id);
+        Optional<Student> student = studentRepository.getStudent(id);
         if (student.isPresent()) {
-            studentRepository.delete(student.get());
+            studentRepository.deleteStudent(id);
             return ResponseEntity.ok("Student deleted");
         }
         throw new StudentNotFoundException("Student not Found while Delete");
     }
 
     public ResponseEntity<String> updateStudentName(int id, String newName) {
-        Optional<Student> student = studentRepository.findById(id);
+        Optional<Student> student = studentRepository.getStudent(id);
         if (student.isPresent()) {
             student.get().setName(newName);
-            studentRepository.save(student.get());
+            studentRepository.addStudent(student.get());
             return ResponseEntity.ok("Student Name updated");
         } else {
             throw new StudentNotFoundException("Student not Found while Update");
