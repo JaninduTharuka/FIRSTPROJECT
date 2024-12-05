@@ -14,8 +14,9 @@ public class Student {
     private Integer id;
     private String name;
     private Date dob;
+    private String teachername;
 
-    public Student(Integer id, String name, Date dob, String email, String password) {
+    public Student(Integer id, String name, Date dob, String teachername) {
         this.id = id;
         this.name = name;
         this.dob = dob;
@@ -44,5 +45,13 @@ public class Student {
 
     public void setDob(Date dob) {
         this.dob = dob;
+    }
+
+    public String getTeacherName() {
+        return teachername;
+    }
+
+    public void setTeacherName(String teachername) {
+        this.teachername = teachername;
     }
 }

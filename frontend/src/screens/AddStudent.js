@@ -4,10 +4,13 @@ import axios from "axios";
 const AddStudent = () => {
   const [name, setName] = useState("");
   const [dob, setDob] = useState("");
+  const [teachername, setTeachername] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const studentData = { name, dob };
+    const studentData = { name, dob, teacherName: teachername };
+    console.log("Student data:", studentData);
+    
 
     axios
       .post("http://localhost:8080/student/addStudent", studentData)
@@ -15,6 +18,7 @@ const AddStudent = () => {
         alert("Student added successfully!");
         setName("");
         setDob("");
+        setTeachername("");
       })
       .catch((error) => {
         console.error("There was an error adding the student:", error);
@@ -41,6 +45,16 @@ const AddStudent = () => {
             type="date"
             value={dob}
             onChange={(e) => setDob(e.target.value)}
+            style={styles.input}
+            required
+          />
+        </div>
+        <div style={styles.inputGroup}>
+          <label>Teacher:</label>
+          <input
+            type="text"
+            value={teachername}
+            onChange={(e) => setTeachername(e.target.value)}
             style={styles.input}
             required
           />

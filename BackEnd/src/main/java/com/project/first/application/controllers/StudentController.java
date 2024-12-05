@@ -2,7 +2,6 @@ package com.project.first.application.controllers;
 
 import com.project.first.application.dto.request.StudentCreateDto;
 import com.project.first.application.dto.response.StudentGenaralDto;
-import com.project.first.domain.entity.Student;
 import com.project.first.domain.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import java.util.Date;
 @RestController
 @RequestMapping("/student")
 @CrossOrigin(origins = "http://localhost:3000")
-//@AllArgsConstructor
 public class StudentController {
 
     private final StudentService studentService;
@@ -30,7 +28,7 @@ public class StudentController {
 
     @PostMapping("/addStudent")
     public ResponseEntity<StudentGenaralDto> addStudent(@RequestBody StudentCreateDto studentCreateDto) {
-        System.out.println(studentCreateDto);
+        System.out.println(" name: " + studentCreateDto.getName() + " dob: " + studentCreateDto.getDob() + " teacher:" + studentCreateDto.getTeacherName());
         return studentService.addStudent(studentCreateDto);
     }
 

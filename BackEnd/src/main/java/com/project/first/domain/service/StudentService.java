@@ -38,6 +38,8 @@ public class StudentService {
         Student student = new Student();
         student.setName(studentCreateDto.getName());
         student.setDob(studentCreateDto.getDob());
+        System.out.println(studentCreateDto.getTeacherName());
+        student.setTeacherName(studentCreateDto.getTeacherName());
         int id = studentRepository.addStudent(student);
         System.out.println(id);
 
@@ -45,6 +47,7 @@ public class StudentService {
         StudentGenaralDto studentGenaralDto = new StudentGenaralDto();
         studentGenaralDto.setName(studentEntity.getName());
         studentGenaralDto.setDob(studentEntity.getDob());
+        studentGenaralDto.setTeacherName(studentEntity.getTeacherName());
         return ResponseEntity.ok(studentGenaralDto);
     }
 

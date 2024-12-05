@@ -14,6 +14,8 @@
 package com.project.first.external.repository;
 
 import com.project.first.domain.entity.Student;
+import jakarta.transaction.Transactional;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -34,11 +36,36 @@ public class StudentRepository {
     }
 
     // Add a student to the database
+//    public int addStudent(Student student) {
+//        String sql = "INSERT INTO student (name, dob) VALUES (?, ?) RETURNING id";
+//        int id = jdbcTemplate.queryForObject(sql, new Object[]{student.getName(), student.getDob()}, Integer.class);
+//        System.out.println(id);
+//        return id;
+//    }
+    @Transactional
     public int addStudent(Student student) {
-        String sql = "INSERT INTO student (name, dob) VALUES (?, ?) RETURNING id";
-        int id = jdbcTemplate.queryForObject(sql, new Object[]{student.getName(), student.getDob()}, Integer.class);
-        System.out.println(id);
-        return id;
+        // Step 1: Check if the teacher exists
+        String teacherCheckSql = "SELECT id FROM teacher WHERE name = ?";
+        Integer teacherId;
+        try {
+            teacherId = jdbcTemplate.queryForObject(teacherCheckSql, new Object[]{student.getTeacherName()}, Integer.class);
+        } catch (EmptyResultDataAccessException e) {
+            // Step 2: Add the teacher if not found
+            String teacherInsertSql = "INSERT INTO teacher (name) VALUES (?) RETURNING id";
+            teacherId = jdbcTemplate.queryForObject(teacherInsertSql, new Object[]{student.getTeacherName()}, Integer.class);
+        }
+        System.out.println(student.getTeacherName());
+        System.out.println(teacherId);
+        // Step 3: Insert the student
+        String studentInsertSql = "INSERT INTO student (name, dob, teacherName) VALUES (?, ?, ?) RETURNING id";
+        int studentId = jdbcTemplate.queryForObject(
+                studentInsertSql,
+                new Object[]{student.getName(), student.getDob(), student.getTeacherName()},
+                Integer.class
+        );
+
+        System.out.println("Student ID: " + studentId);
+        return studentId;
     }
 
     // Get a student by ID

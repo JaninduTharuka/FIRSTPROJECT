@@ -24,13 +24,13 @@ const ViewStudent = () => {
       }
     } catch (error) {
       console.error("Error fetching student:", error);
-      alert("Error fetching student details. Please try again later.");
+      alert("Could not find student with the given ID.");
       setStudent(null); // Reset student state in case of error
     }
   };
 
   return (
-    <div>
+    <div style={styles.container}>
       <h1>View Student</h1>
       <input
         type="number"
@@ -46,6 +46,7 @@ const ViewStudent = () => {
           <h3>Student Details</h3>
           <h4>Name: {student.name}</h4>
           <h4>Date of Birth: {student.dob}</h4>
+          <h4>Teacher: {student.teacherName}</h4>
         </div>
       ) : (
         <h4>No student data to display.</h4>
@@ -55,3 +56,8 @@ const ViewStudent = () => {
 };
 
 export default ViewStudent;
+
+
+const styles = {
+  container: { padding: "20px", fontFamily: "Arial", textAlign: "center" },
+};

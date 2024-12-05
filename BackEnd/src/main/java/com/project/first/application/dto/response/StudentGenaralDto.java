@@ -5,10 +5,12 @@ import java.util.Date;
 public class StudentGenaralDto {
     private String name;
     private Date dob;
+    private String teacherName;
 
-    public StudentGenaralDto(String name, Date dob) {
+    public StudentGenaralDto(String name, Date dob, String teacherName) {
         this.name = name;
         this.dob = dob;
+        this.teacherName = teacherName;
     }
 
     public StudentGenaralDto() {
@@ -30,4 +32,13 @@ public class StudentGenaralDto {
     public void setDob(Date dob) {
         this.dob = dob;
     }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public void setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+    }
 }
+
