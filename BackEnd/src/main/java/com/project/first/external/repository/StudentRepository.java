@@ -54,8 +54,7 @@ public class StudentRepository {
             String teacherInsertSql = "INSERT INTO teacher (name) VALUES (?) RETURNING id";
             teacherId = jdbcTemplate.queryForObject(teacherInsertSql, new Object[]{student.getTeacherName()}, Integer.class);
         }
-        System.out.println(student.getTeacherName());
-        System.out.println(teacherId);
+
         // Step 3: Insert the student
         String studentInsertSql = "INSERT INTO student (name, dob, teacherName) VALUES (?, ?, ?) RETURNING id";
         int studentId = jdbcTemplate.queryForObject(
@@ -103,6 +102,7 @@ public class StudentRepository {
             student.setId(rs.getInt("id"));
             student.setName(rs.getString("name"));
             student.setDob(rs.getDate("dob"));
+            student.setTeacherName(rs.getString("teacherName"));
             return student;
         }
     }

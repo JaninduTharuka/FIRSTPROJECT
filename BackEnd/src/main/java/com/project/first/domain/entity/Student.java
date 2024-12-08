@@ -20,6 +20,7 @@ public class Student {
         this.id = id;
         this.name = name;
         this.dob = dob;
+        this.teachername = teachername;
     }
     public Student() {}
 

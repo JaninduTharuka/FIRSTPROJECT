@@ -28,6 +28,7 @@ public class StudentService {
             Student studentEntity = student.get();
             studentGenaralDto.setName(studentEntity.getName());
             studentGenaralDto.setDob(studentEntity.getDob());
+            studentGenaralDto.setTeacherName(studentEntity.getTeacherName());
             return ResponseEntity.ok(studentGenaralDto);
         } else {
             throw new StudentNotFoundException("Student not found with id " + id);

@@ -18,19 +18,31 @@ const HomePage = () => {
   );
 };
 
+
+export default HomePage;
+
+
+
 const styles = {
-  container: { textAlign: "center", padding: "50px" },
-  actions: { marginTop: "20px" },
+  container: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100vh",
+  },
+  actions: {
+    display: "flex",
+    flexDirection: "row",
+    marginTop: 20,
+  },
   button: {
-    display: "inline-block",
-    margin: "10px",
-    padding: "10px 20px",
+    display: "block",
+    padding: 10,
+    margin: 10,
     backgroundColor: "#4CAF50",
     color: "white",
     textDecoration: "none",
-    borderRadius: "5px",
-    fontSize: "16px",
+    borderRadius: 5,
   },
 };
-
-export default HomePage;
