@@ -9,22 +9,26 @@ const ViewStudent = () => {
     if (!studentId) {
       // Reset student data if the ID is empty
       setStudent(null);
+      console.log("Student ID is required!");
       return;
     }
 
     try {
+      console.log("Fetching student with ID:", studentId);
       const response = await axios.get(
-        `http://localhost:8080/student/getStudent?id=${studentId}`
+        `http://localhost:8080/students?id=${studentId}`
       );
+      console.log("Student data:", response.data);
       if (response.data) {
         setStudent(response.data);
+        console.log(student);
       } else {
         alert("Student not found!");
         setStudent(null); // Reset student state in case of no data
       }
     } catch (error) {
       console.error("Error fetching student:", error);
-      alert("Could not find student with the given ID.");
+      alert("Could not find student with the given ID:", studentId);
       setStudent(null); // Reset student state in case of error
     }
   };
@@ -45,8 +49,7 @@ const ViewStudent = () => {
         <div>
           <h3>Student Details</h3>
           <h4>Name: {student.name}</h4>
-          <h4>Date of Birth: {student.dob}</h4>
-          <h4>Teacher: {student.teacherName}</h4>
+          <h4>Age: {student.age}</h4>
         </div>
       ) : (
         <h4>No student data to display.</h4>

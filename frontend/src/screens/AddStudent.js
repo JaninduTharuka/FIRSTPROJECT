@@ -3,22 +3,20 @@ import axios from "axios";
 
 const AddStudent = () => {
   const [name, setName] = useState("");
-  const [dob, setDob] = useState("");
-  const [teachername, setTeachername] = useState("");
+  const [age, setAge] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const studentData = { name, dob, teacherName: teachername };
+    const studentData = { name, age};
     console.log("Student data:", studentData);
     
 
     axios
-      .post("http://localhost:8080/student/addStudent", studentData)
+      .post("http://localhost:8080/students/", studentData)
       .then((response) => {
         alert("Student added successfully!");
         setName("");
-        setDob("");
-        setTeachername("");
+        setAge("");
       })
       .catch((error) => {
         console.error("There was an error adding the student:", error);
@@ -40,25 +38,16 @@ const AddStudent = () => {
           />
         </div>
         <div style={styles.inputGroup}>
-          <label>Date of Birth:</label>
+          <label>Age:</label>
           <input
-            type="date"
-            value={dob}
-            onChange={(e) => setDob(e.target.value)}
+            type="number"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
             style={styles.input}
             required
           />
         </div>
-        <div style={styles.inputGroup}>
-          <label>Teacher:</label>
-          <input
-            type="text"
-            value={teachername}
-            onChange={(e) => setTeachername(e.target.value)}
-            style={styles.input}
-            required
-          />
-        </div>
+
         <button type="submit" style={styles.submitButton}>
           Add Student
         </button>
