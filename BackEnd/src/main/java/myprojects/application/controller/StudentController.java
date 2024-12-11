@@ -1,90 +1,56 @@
 package myprojects.application.controller;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import myprojects.domain.entity.Student;
 import myprojects.domain.service.StudentService;
+import myprojects.external.repository.StudentRepository;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
-public class StudentController implements HttpHandler {
+@WebServlet("/students")
+public class StudentController extends HttpServlet {
 
+    private final StudentService studentService;
 
-    private  final StudentService studentService;
-
-    public StudentController(StudentService studentService) {
-        this.studentService = studentService;
+    public StudentController() {
+        this.studentService = new StudentService(new StudentRepository());
     }
 
-    private void addCorsHeaders(HttpExchange exchange) {
-        exchange.getResponseHeaders().add("Content-Type", "application/json");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "http://localhost:3000");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-        exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
-        exchange.getResponseHeaders().add("Access-Control-Max-Age", "3600");
-    }
+    // Service method to catch all requests.
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("Request received:");
+        System.out.println("Method: " + req.getMethod());
+        System.out.println("Request URI: " + req.getRequestURI());
+        System.out.println("Query String: " + req.getQueryString());
 
+        // Log headers for debugging
+        req.getHeaderNames().asIterator().forEachRemaining(header ->
+                System.out.println(header + ": " + req.getHeader(header))
+        );
 
-    private Map<String, String> parseQueryParams(String query) {
-        Map<String, String> queryParams = new HashMap<>();
-        if (query != null && !query.isEmpty()) {
-            String[] pairs = query.split("&");
-            for (String pair : pairs) {
-                String[] keyValue = pair.split("=", 2);
-                if (keyValue.length == 2) {
-                    queryParams.put(keyValue[0], keyValue[1]);
-                }
-            }
-        }
-        return queryParams;
+        super.service(req, resp);
     }
 
 
     @Override
-    public void handle(HttpExchange exchange) throws IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        addCorsHeaders(exchange);
+        System.out.println("Get request received.....");
 
-        System.out.println("Got a request.......................");
+        // Allow cross-origin requests
+        addCorsHeaders(resp);
 
-        String method = exchange.getRequestMethod();
+        String idParam = req.getParameter("id");
 
-        switch (method) {
-            case "OPTIONS":
-                handleOptions(exchange);
-                return;
-            case "GET":
-                handleGet(exchange);
-                break;
-            case "POST":
-                handlePost(exchange);
-                break;
-//            case "PUT":
-//                handlePut(exchange);
-//                break;
-//            case "DELETE":
-//                handleDelete(exchange);
-//                break;
-            default:
-                sendResponse(exchange, "{\"error\": \"Unsupported Request: " + method + "\"}", 405);
-        }
-    }
-
-    private void handleOptions(HttpExchange exchange) throws IOException {
-        exchange.sendResponseHeaders(204, -1);            // No content for OPTIONS
-    }
-
-    private void handleGet(HttpExchange exchange) throws IOException {
         try {
-            String query = exchange.getRequestURI().getQuery();
-            Map<String, String> params = parseQueryParams(query);
-            String idParam = params.get("id");
-
             if (idParam != null) {
                 int studentId = Integer.parseInt(idParam);
                 Optional<Student> student = studentService.getStudent(studentId);
@@ -94,59 +60,93 @@ public class StudentController implements HttpHandler {
                             "{\"id\": %d, \"name\": \"%s\", \"age\": %d}",
                             studentGot.getId(), studentGot.getName(), studentGot.getAge()
                     );
-                    sendResponse(exchange, response, 200);
+                    sendResponse(resp, response, 200);
                 } else {
-                    sendResponse(exchange, "{\"error\": \"Not Found\"}", 404);
+                    sendResponse(resp, "{\"error\": \"Student not found\"}", 404);
                 }
             } else {
-                sendResponse(exchange, "{\"error\": \"Missing 'id' parameter\"}", 400);
+                sendResponse(resp, "{\"error\": \"Missing 'id' parameter\"}", 400);
             }
-        } catch (Exception e) {
-            sendResponse(exchange, "{\"error\": \"" + e.getMessage() + "\"}", 500);
+        } catch (NumberFormatException e) {
+            sendResponse(resp, "{\"error\": \"Invalid 'id' parameter\"}", 400);
+        } catch (SQLException e) {
+            logError(e, "Error fetching student by ID");
+            sendResponse(resp, "{\"error\": \"Internal Server Error\"}", 500);
         }
     }
 
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-    private void handlePost(HttpExchange exchange) throws IOException {
-        System.out.println("Got a Post Request..............");
-        String request = new String(exchange.getRequestBody().readAllBytes());
-        System.out.println(request);
+        System.out.println("Post request received.....");
 
+        // Allow cross-origin requests
+        addCorsHeaders(resp);
+
+        String requestBody = new String(req.getInputStream().readAllBytes());
         String name = null;
         int age = -1;
 
+        System.out.println(requestBody);
+
         try {
-            System.out.println("***********************************************");
-            if (request.contains("name")) {
-                name = request.split("\"name\"\\s*:\\s*\"")[1].split("\"")[0];
+            if (requestBody.contains("name")) {
+                name = requestBody.split("\"name\"\\s*:\\s*\"")[1].split("\"")[0];
+                System.out.println(name);
             }
-            if (request.contains("age")) {
-                age = Integer.parseInt(request.split("\"age\"\\s*:\\s*\"")[1].split("\"")[0]);
+            if (requestBody.contains("age")) {
+                System.out.println("dddddddddddddddddddddddddddddddddddddddddddddd");
+                System.out.println(requestBody.split("\"age\"\\s*:\\s*\"")[1]);
+                age = Integer.parseInt(requestBody.split("\"age\"\\s*:\\s*\"")[1].split("\"")[0]);
+                System.out.println(age);
             }
         } catch (Exception e) {
-            System.out.println(e);
-            sendResponse(exchange, "Invalid JSON format", 400);
+            sendResponse(resp, "{\"error\": \"Invalid JSON format\"}", 400);
             return;
         }
-
-        System.out.println(name + " " + age);
 
         if (name == null || age < 0) {
-            sendResponse(exchange, "Invalid Name/Age", 400);
+            System.out.println("Name and age are empty");
+            sendResponse(resp, "{\"error\": \"Invalid name or age\"}", 400);
             return;
         }
+
         try {
+            System.out.println("name = " + name+ " age = " + age);
             studentService.addStudent(name, age);
-            sendResponse(exchange, "Success", 200);
+            sendResponse(resp, "{\"message\": \"Student added successfully\"}", 200);
         } catch (SQLException e) {
-            sendResponse(exchange, e.getMessage(), 500);
+            logError(e, "Error adding student");
+            sendResponse(resp, "{\"error\": \"Internal Server Error\"}", 500);
         }
     }
 
-    private void sendResponse(HttpExchange exchange, String response, int status) throws IOException {
-        exchange.sendResponseHeaders(status, response.getBytes().length);
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response.getBytes());
-        }
+    @Override
+    protected void doOptions(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("Options request received.....");
+        addCorsHeaders(resp);
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, X-Requested-With"); // Add all necessary headers
+        resp.setStatus(HttpServletResponse.SC_OK);
+    }
+
+
+    private void addCorsHeaders(HttpServletResponse resp) {
+        System.out.println("adding CORS headers.....");
+        resp.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");  // Frontend URL
+        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS"); // Allowed methods
+        resp.setHeader("Access-Control-Allow-Headers", "Content-Type, application/json, Authorization");
+        resp.setHeader("Access-Control-Max-Age", "3600");  // Cache preflight request for 1 hour
+    }
+
+    private void sendResponse(HttpServletResponse resp, String response, int status) throws IOException {
+        System.out.println("sending response....");
+        resp.setStatus(status);
+        resp.setContentType("application/json");
+        resp.getWriter().write(response);
+    }
+
+    private void logError(Exception e, String message) {
+        System.err.println(message);
+        e.printStackTrace();
     }
 }

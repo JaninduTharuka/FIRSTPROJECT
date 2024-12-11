@@ -14,7 +14,7 @@ public class StudentRepository {
     private Connection getConnection() throws SQLException {
         try {
             // Explicitly load the PostgreSQL JDBC driver
-//            Class.forName("org.postgresql.Driver");
+            Class.forName("org.postgresql.Driver");
 
             Properties props = new Properties();
             props.setProperty("user", db_user);
@@ -27,9 +27,9 @@ public class StudentRepository {
             System.out.println("Connected to the database successfully!");
             return conn;
 
-//        } catch (ClassNotFoundException e) {
-//            System.out.println("PostgreSQL driver not found: " + e.getMessage());
-//            throw new SQLException("PostgreSQL driver not found.");
+        } catch (ClassNotFoundException e) {
+            System.out.println("PostgreSQL driver not found: " + e.getMessage());
+            throw new SQLException("PostgreSQL driver not found.");
         } catch (SQLException e) {
             System.out.println("Could not connect to the database: " + e.getMessage());
             throw e; // Rethrow the SQLException to be handled elsewhere
