@@ -41,6 +41,8 @@ public class StudentRepository {
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
+            System.out.println("Executing query: " + sql + " with parameters: " + id);
+
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -49,6 +51,7 @@ public class StudentRepository {
                     String name = rs.getString("name");
                     int age = rs.getInt("age");
                     Student student = new Student(studentId, name, age);
+                    System.out.println("Found student by,   name: " + student.getName() + " age: " + student.getAge());
                     return Optional.of(student); // Return the Student wrapped in Optional
                 }
             }

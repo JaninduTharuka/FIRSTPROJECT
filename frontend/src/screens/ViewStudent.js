@@ -16,7 +16,7 @@ const ViewStudent = () => {
     try {
       console.log("Fetching student with ID:", studentId);
       const response = await axios.get(
-        `http://localhost:8080/first-1.0-SNAPSHOT/students?id=${studentId}`
+        `http://localhost:8080/students?id=${studentId}`
       );
       console.log("Student data:", response.data);
       if (response.data) {

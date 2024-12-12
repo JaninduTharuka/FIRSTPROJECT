@@ -12,9 +12,10 @@ const AddStudent = () => {
     
 
     axios
-      .post("http://localhost:8080/first-1.0-SNAPSHOT/students", 
+      .post("http://localhost:8080/students", 
       studentData,
-      { headers: { "Content-Type": "application/json" } }
+      { headers: { "Content-Type": "application/json" } },
+      console.log("request sent:", studentData)
     )
       .then((response) => {
         alert("Student added successfully!");

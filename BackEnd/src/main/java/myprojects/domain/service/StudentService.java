@@ -15,7 +15,6 @@ public class StudentService {
 
     public Optional<Student> getStudent(int id) throws SQLException {
         System.out.println("Came to Student Service"); // ******************************
-        System.out.println(id); // ******************************************************
         return studentRepository.findById(id);
     }
 
